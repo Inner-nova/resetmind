@@ -1,0 +1,1093 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>마음리셋</title>
+  <meta name="description" content="마음 비우기 연습" />
+
+  <style>
+    :root{
+      --bg:#ffffff;
+      --panel:#ffffff;
+      --text:#111827;
+      --muted:#6b7280;
+      --line:#e5e7eb;
+      --shadow:0 18px 45px rgba(17,24,39,.08);
+
+      --accent:#5fbf8a;
+      --accent2:#a7e8c7;
+      --accentSoft:rgba(95,191,138,.12);
+      --focus:rgba(95,191,138,.18);
+
+      --radius:18px;
+      --font: "MaruBuri", "마루부리", serif;
+
+      --creditsSpace: 56px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: var(--font);
+      color:var(--text);
+      background: var(--bg);
+      padding-bottom: var(--creditsSpace);
+    }
+
+    input, textarea, button, label, small { font-family: inherit; }
+    input[type="checkbox"], input[type="radio"]{ accent-color:#1f7a54; }
+
+    .wrap{ max-width:920px; margin:28px auto 56px; padding:0 16px; }
+
+    header{
+      display:flex; gap:14px; align-items:flex-start; justify-content:space-between;
+      margin-bottom:14px;
+    }
+
+    .brand{ display:flex; gap:12px; align-items:flex-start; min-width:0; }
+
+    .mark{
+      width:44px;height:44px;border-radius:14px;
+      background: rgba(95,191,138,.10);
+      border:1px solid rgba(95,191,138,.28);
+      box-shadow: 0 10px 24px rgba(17,24,39,.06);
+      display:grid;place-items:center; flex:none;
+    }
+    .mark svg{opacity:.95}
+
+    /* ✅ 타이틀 더 작게 + 모바일 줄바꿈 방지 */
+    h1{
+      font-size:18px;
+      margin:6px 0 4px;
+      letter-spacing:-.3px;
+      line-height:1.1;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width: 58vw;
+    }
+    @media (max-width:420px){
+      h1{ font-size:17px; max-width: 52vw; }
+    }
+
+    .topActions{
+      display:flex; gap:10px; flex-wrap:wrap;
+      justify-content:flex-end; align-items:center; margin-top:2px;
+    }
+
+    .btn{
+      border:1px solid var(--line); background:var(--panel); color:var(--text);
+      border-radius:999px; padding:9px 12px; font-size:13px;
+      cursor:pointer; box-shadow: 0 8px 18px rgba(17,24,39,.05);
+      transition: transform .08s ease, border-color .15s ease, box-shadow .15s ease;
+      display:inline-flex; gap:8px; align-items:center;
+    }
+    .btn:hover{
+      transform:translateY(-1px);
+      border-color: rgba(95,191,138,.40);
+      box-shadow: 0 10px 26px rgba(95,191,138,.08);
+    }
+    .btn:active{transform:translateY(0)}
+    .btn.danger{ border-color: rgba(220,38,38,.25); background: rgba(220,38,38,.04); }
+    .btn.soft{ border-color: rgba(95,191,138,.28); background: rgba(95,191,138,.06); }
+
+    .grid{ display:grid; grid-template-columns: 1fr; gap:14px; margin-top:14px; }
+
+    .card{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+
+    .cardHeader{
+      padding:14px 16px;
+      border-bottom:1px solid rgba(229,231,235,.9);
+      display:flex; justify-content:space-between; gap:10px; align-items:center;
+      background: var(--panel);
+    }
+    .cardHeader h2{ margin:0; font-size:14px; letter-spacing:-.2px; }
+    .cardHeader small{ color:var(--muted); font-size:12px; }
+
+    .cardBody{padding:16px}
+
+    .section{
+      padding:14px 14px;
+      border:1px solid rgba(229,231,235,.75);
+      border-radius:16px;
+      background:#fff;
+      margin:12px 0;
+      position:relative;
+      box-shadow: 0 10px 22px rgba(17,24,39,.04);
+      transition: border-color .15s ease, box-shadow .15s ease, transform .08s ease;
+    }
+    .section:hover{
+      border-color: rgba(95,191,138,.32);
+      box-shadow: 0 12px 28px rgba(95,191,138,.08);
+      transform: translateY(-1px);
+    }
+    .section::before{
+      content:"";
+      position:absolute; left:0; top:10px; bottom:10px;
+      width:4px; border-radius:999px;
+      background: rgba(95,191,138,.75); opacity:.9;
+    }
+
+    .stepTitle{ display:flex; gap:10px; align-items:center; margin-bottom:10px; padding-left:6px; }
+    .badge{
+      font-size:12px; font-weight:700; color:var(--accent);
+      background: rgba(95,191,138,.08);
+      border:1px solid rgba(95,191,138,.20);
+      padding:6px 10px; border-radius:999px; user-select:none;
+    }
+    .stepTitle .t{ font-size:14px; font-weight:700; letter-spacing:-.2px; }
+
+    .hint{ margin:0; color:var(--muted); font-size:13px; line-height:1.6; padding-left:6px; }
+
+    .row{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+    .field{
+      flex:1 1 190px; min-width: 170px;
+      display:flex; flex-direction:column; gap:6px;
+      padding-left:6px;
+      min-width:0;
+    }
+    label{ font-size:12px; color:var(--muted); margin:0; }
+
+    input[type="text"], input[type="datetime-local"], textarea{
+      width:100%;
+      max-width:100%;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:11px 12px;
+      font-size:14px;
+      outline:none;
+      background:#fff;
+      transition:border-color .15s ease, box-shadow .15s ease;
+      min-width:0;
+    }
+    textarea{min-height:92px; resize:vertical; line-height:1.7}
+    input:focus, textarea:focus{
+      border-color: rgba(95,191,138,.45);
+      box-shadow: 0 0 0 4px var(--focus);
+    }
+
+    /* ✅ 모바일 datetime-local이 OS 때문에 "키가 커지는" 문제 강제 억제 */
+    input[type="datetime-local"]{
+      -webkit-appearance:none;
+      appearance:none;
+    }
+
+    .checks{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:10px;
+      margin-top:10px;
+      padding-left:6px;
+    }
+    @media (min-width: 520px){
+      .checks{grid-template-columns: 1fr 1fr;}
+    }
+
+    .check{
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:10px 11px;
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      background: #fff;
+      transition: border-color .15s ease, box-shadow .15s ease;
+    }
+    .check:hover{
+      border-color: rgba(95,191,138,.32);
+      box-shadow: 0 8px 16px rgba(17,24,39,.04);
+    }
+    .check input[type="checkbox"]{margin-top:2px}
+    .check b{font-size:13px}
+    .check span{
+      display:block; color:var(--muted);
+      font-size:12px; margin-top:2px; line-height:1.35;
+    }
+
+    .inlineField{
+      width:100%;
+      margin-top:8px;
+      display:none;
+    }
+    .inlineField input[type="text"], .inlineField textarea{
+      border-radius:12px;
+      padding:10px 11px;
+      font-size:13px;
+    }
+    .inlineField textarea{ min-height:74px; }
+
+    .quote{
+      margin-top:10px;
+      border-left:3px solid rgba(95,191,138,.55);
+      background: rgba(95,191,138,.05);
+      padding:10px 12px;
+      border-radius: 12px;
+      color:#374151;
+      font-size:13px;
+      line-height:1.7;
+      margin-left:6px;
+      margin-right:2px;
+    }
+
+    .s7OtherInner{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      width:100%;
+      min-width:0;
+    }
+    .s7OtherInner b{
+      white-space:nowrap;
+      flex:none;
+    }
+    .s7OtherField{
+      flex:1;
+      min-width:0;
+      display:none;
+      margin-top:-2px;
+    }
+    .s7OtherField input{
+      width:100%;
+      border-radius:12px;
+      padding:10px 11px;
+      font-size:13px;
+    }
+
+    .historyListWrap{ max-height: 320px; overflow:auto; padding-right:6px; }
+    .historyList{ display:flex; flex-direction:column; gap:10px; }
+
+    .historyEmpty{
+      border:1px dashed rgba(229,231,235,.95);
+      border-radius:16px;
+      padding:14px 14px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.6;
+      background:#fff;
+    }
+
+    .historyItem{
+      border:1px solid rgba(229,231,235,.85);
+      border-radius:16px;
+      background:#fff;
+      padding:12px 12px;
+      display:flex;
+      gap:10px;
+      justify-content:space-between;
+      align-items:flex-start;
+      box-shadow: 0 10px 20px rgba(17,24,39,.03);
+      transition: border-color .15s ease, box-shadow .15s ease, transform .08s ease;
+    }
+    .historyItem:hover{
+      border-color: rgba(95,191,138,.32);
+      box-shadow: 0 12px 26px rgba(95,191,138,.07);
+      transform: translateY(-1px);
+    }
+    .hMain{min-width:0}
+    .hTitle{
+      margin:0 0 4px;
+      font-size:13px;
+      font-weight:700;
+      letter-spacing:-.2px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .hMeta{
+      margin:0;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.45;
+    }
+    .hMeta .chip{
+      display:inline-block;
+      margin-right:6px;
+      padding:3px 8px;
+      border-radius:999px;
+      border:1px solid rgba(95,191,138,.22);
+      background: rgba(95,191,138,.05);
+      color: rgba(17,24,39,.75);
+      font-size:11px;
+      vertical-align:middle;
+    }
+    .hBtns{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      flex:none;
+    }
+    .hBtn{
+      border:1px solid var(--line);
+      background:var(--panel);
+      color:var(--text);
+      border-radius:999px;
+      padding:7px 10px;
+      font-size:12px;
+      cursor:pointer;
+      box-shadow: 0 6px 14px rgba(17,24,39,.04);
+      transition: transform .08s ease, border-color .15s ease, box-shadow .15s ease;
+    }
+    .hBtn:hover{
+      transform:translateY(-1px);
+      border-color: rgba(95,191,138,.38);
+      box-shadow: 0 10px 22px rgba(95,191,138,.08);
+    }
+    .hBtn:active{transform:translateY(0)}
+    .hBtn.danger{ border-color: rgba(220,38,38,.25); background: rgba(220,38,38,.04); }
+
+    .creditsBG{
+      position:fixed;
+      left:14px;
+      bottom:10px;
+      z-index:-1;
+      pointer-events:none;
+      user-select:none;
+      color: rgba(107,114,128,.28);
+      font-size:12px;
+      letter-spacing:-.1px;
+      line-height:1.25;
+      white-space:nowrap;
+    }
+
+    @media print{
+      body{background:#fff; padding-bottom:0}
+      .topActions, #historyCard, .creditsBG{display:none !important;}
+      .wrap{margin:0; max-width:none}
+      .card{box-shadow:none}
+      .section{box-shadow:none; border:1px solid #ddd}
+      .section::before{display:none}
+    }
+
+    /* ===========================================================
+       ✅ STEP1 최종 해결: flex/field/gap 전부 버리고 GRID로 고정
+       "공백" 생길 수 있는 원인 제거
+       =========================================================== */
+    #step1 .hint{ padding-left:6px; }
+    #step1 .s1Wrap{
+      margin-top:6px;
+      padding-left:6px;
+    }
+    #step1 .s1Grid2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap:10px;
+      row-gap:8px; /* ✅ PC에서도 타이트 */
+      align-items:start;
+    }
+    #step1 .s1Grid1{
+      margin-top:8px;
+      display:grid;
+      grid-template-columns:1fr;
+      row-gap:0;
+    }
+    #step1 .s1Block{
+      margin:0;
+      padding:0;
+      min-width:0;
+    }
+    #step1 .s1Block label{
+      display:block;
+      margin:0 0 3px 0;  /* ✅ 라벨-입력 간격 고정 */
+      line-height:1.15;
+    }
+    #step1 .s1Block input{
+      display:block;
+      margin:0;
+      width:100%;
+      max-width:100%;
+    }
+
+    @media (max-width:520px){
+      #step1 .s1Wrap{ padding-left:0; margin-top:4px; }
+      #step1 .s1Grid2{
+        grid-template-columns:1fr;  /* ✅ 모바일 한 줄 */
+        row-gap:6px;                /* ✅ 칸 사이 공백 최소 */
+        column-gap:0;
+      }
+      #step1 .s1Grid1{ margin-top:6px; }
+
+      /* ✅ 모바일 입력칸 “키” 확 줄이기 */
+      #step1 input[type="datetime-local"],
+      #step1 input[type="text"]{
+        padding:6px 10px !important;
+        font-size:13px !important;
+        border-radius:12px !important;
+        height:36px !important;     /* ✅ 더 줄임 */
+        line-height:1.1 !important;
+      }
+      #step1 .s1Block label{ margin-bottom:2px !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="mark" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" role="img" aria-label="로고">
+            <circle cx="12" cy="12" r="9" stroke="rgba(95,191,138,.85)" stroke-width="1.6"/>
+            <path d="M12 16.6v-4.2" stroke="rgba(95,191,138,.85)" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M12 12.4c-2.1.1-3.7-1.2-4.2-3.2 2.1-.1 3.7 1.2 4.2 3.2Z"
+                  fill="rgba(95,191,138,.22)" stroke="rgba(95,191,138,.85)" stroke-width="1.2" stroke-linejoin="round"/>
+            <path d="M12 12.4c2.1.1 3.7-1.2 4.2-3.2-2.1-.1 3.7 1.2 4.2 3.2Z"
+                  fill="rgba(167,232,199,.30)" stroke="rgba(95,191,138,.85)" stroke-width="1.2" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div>
+          <h1>마음리셋</h1>
+        </div>
+      </div>
+
+      <div class="topActions">
+        <!-- ✅ 자동저장 탭 제거 -->
+        <button class="btn soft" id="btnNew" type="button" title="새 기록(새 글) 만들기">＋ 새 글</button>
+        <button class="btn danger" id="btnReset" type="button" title="현재 글 입력 초기화">↺ 초기화</button>
+      </div>
+    </header>
+
+    <div class="grid">
+      <section class="card" aria-label="노트 작성 영역">
+        <div class="cardHeader">
+          <small id="stamp">—</small>
+        </div>
+
+        <div class="cardBody">
+          <!-- STEP 0 -->
+          <div class="section" id="step0">
+            <div class="stepTitle">
+              <span class="badge">STEP 0</span>
+              <div class="t">상태 체크하기</div>
+            </div>
+            <p class="hint">지금 나의 상태가 어떤지 해당하는 것에 체크해 보세요</p>
+
+            <div class="checks" role="group" aria-label="상태 체크">
+              <label class="check"><input type="checkbox" id="s0_1"><div><b>숨이 가쁘다</b></div></label>
+              <label class="check"><input type="checkbox" id="s0_2"><div><b>머리가 멍하거나 뜨겁다</b></div></label>
+              <label class="check"><input type="checkbox" id="s0_3"><div><b>몸이 긴장되거나 굳어 있다</b></div></label>
+              <label class="check"><input type="checkbox" id="s0_4"><div><b>생각이 멈추지 않는다</b></div></label>
+              <label class="check"><input type="checkbox" id="s0_5"><div><b>가슴이 답답하다</b></div></label>
+
+              <div class="check" id="s0_other_box">
+                <input type="checkbox" id="s0_other_chk" />
+                <div style="flex:1; min-width:0;">
+                  <div style="font-size:13px; font-weight:400; color:var(--text); line-height:1.2;">기타</div>
+                  <div class="inlineField" id="s0_other_field">
+                    <input type="text" id="s0_other_text" placeholder="예: 속이 울렁거린다 / 눈물이 난다 / 어지럽다..." />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 1 (✅ 공백 해결: GRID 구조) -->
+          <div class="section" id="step1">
+            <div class="stepTitle">
+              <span class="badge">STEP 1</span>
+              <div class="t">지금 여기 인식하기</div>
+            </div>
+            <p class="hint">지금 여기의 시간과 장소를 인식해 보세요.</p>
+
+            <div class="s1Wrap">
+              <div class="s1Grid2">
+                <div class="s1Block">
+                  <label for="when">날짜/시간</label>
+                  <input type="datetime-local" id="when" />
+                </div>
+
+                <div class="s1Block">
+                  <label for="where">내가 있는 장소</label>
+                  <input type="text" id="where" placeholder="예: 집 거실, 카페, 길거리..." />
+                </div>
+              </div>
+
+              <div class="s1Grid1">
+                <div class="s1Block">
+                  <label for="see3">지금 눈에 보이는 것 3가지</label>
+                  <input type="text" id="see3" placeholder="예: 창문, 컵, 의자..." />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 2 -->
+          <div class="section" id="step2">
+            <div class="stepTitle">
+              <span class="badge">STEP 2</span>
+              <div class="t">나와 생각 분리하기</div>
+            </div>
+            <p class="hint">내 생각을 적어본 뒤 떨어뜨려 놓고 보는 연습이에요.</p>
+
+            <div class="field" style="margin-top:10px">
+              <label for="thought">지금 떠오르는 생각을 자유롭게 적어 보세요. 무엇이든 좋아요.</label>
+              <textarea id="thought"></textarea>
+            </div>
+
+            <div class="quote">
+              <b>분리하기</b><br/>
+              <label style="display:flex; gap:10px; align-items:flex-start; margin-top:8px;">
+                <input type="checkbox" id="chkThoughtIsThought" />
+                <span>이것은 단지 생각이다. 사실이 아니다.</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- STEP 3 -->
+          <div class="section" id="step3">
+            <div class="stepTitle">
+              <span class="badge">STEP 3</span>
+              <div class="t">내가 붙인 의미 내려놓기</div>
+            </div>
+            <p class="hint">지금 마음이 힘든 이유는 내가 붙인 의미 때문일 수 있어요</p>
+
+            <div class="field" style="margin-top:10px">
+              <label for="meaning">내가 붙인 의미를 써 볼까요?</label>
+              <input type="text" id="meaning" placeholder="예: 무시당했다 / 난 부족하다 / 큰일 났다..." />
+            </div>
+
+            <div class="field" style="margin-top:10px">
+              <label for="releaseMeaning">그 의미를 내려놓을 수 있는 문장을 적어보세요.</label>
+              <input
+                type="text"
+                id="releaseMeaning"
+                placeholder="예: 이건 그냥 내 해석이다 / 내 생각이 틀릴 수 있다 / 이건 내게 아무런 도움이 안 된다"
+              />
+            </div>
+          </div>
+
+          <!-- STEP 4 -->
+          <div class="section" id="step4">
+            <div class="stepTitle">
+              <span class="badge">STEP 4</span>
+              <div class="t">감각에 집중하기</div>
+            </div>
+            <p class="hint">의미를 제외하면 감각만 남게 돼요. 지금 느껴지는 것을 감각으로 받아들여 보세요.</p>
+
+            <div class="checks" style="margin-top:12px" role="group" aria-label="지금의 감각">
+              <label class="check"><input type="checkbox" id="left_sound"><div><b>소리</b><span>소리는 그냥 소리로 듣기</span></div></label>
+              <label class="check"><input type="checkbox" id="left_touch"><div><b>촉감</b><span>손, 발, 옷감, 바닥 감각 느끼기</span></div></label>
+              <label class="check"><input type="checkbox" id="left_tension"><div><b>긴장</b><span>턱, 어깨, 배에 들어간 힘 인식하기</span></div></label>
+              <label class="check"><input type="checkbox" id="left_vision"><div><b>사물</b><span>점, 선, 면의 조합으로 바라보기</span></div></label>
+              <label class="check"><input type="checkbox" id="left_text"><div><b>텍스트</b><span>그냥 텍스트로 보기</span></div></label>
+
+              <div class="check" id="s4_other_box">
+                <input type="checkbox" id="s4_other_chk" />
+                <div style="flex:1; min-width:0;">
+                  <div style="font-size:13px; font-weight:400; color:var(--text); line-height:1.2;">기타</div>
+                  <div class="inlineField" id="s4_other_field">
+                    <input type="text" id="s4_other_text" placeholder="" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 5 -->
+          <div class="section" id="step5">
+            <div class="stepTitle">
+              <span class="badge">STEP 5</span>
+              <div class="t">중심 잡기</div>
+            </div>
+            <p class="hint">이제 몸을 이완시키고 이 순간으로 돌아올 수 있어요. 하나씩 실행해 보세요.</p>
+
+            <div class="checks" role="group" aria-label="중심 찾기">
+              <label class="check">
+                <input type="checkbox" id="c_breath3">
+                <div>
+                  <b>심호흡 크게 3번 하기</b>
+                  <span>숨을 크게 들이마셨다 내쉬는 것을 3번 반복하세요</span>
+                </div>
+              </label>
+
+              <label class="check">
+                <input type="checkbox" id="c_feet">
+                <div>
+                  <b>발바닥 감각 느끼기</b>
+                  <span>무게가 실리는 지점을 느껴보세요</span>
+                </div>
+              </label>
+
+              <label class="check">
+                <input type="checkbox" id="c_jaw">
+                <div>
+                  <b>긴장된 몸의 힘 풀기</b>
+                  <span>턱, 어깨, 배에 들어간 힘을 천천히 빼주세요</span>
+                </div>
+              </label>
+
+              <label class="check">
+                <input type="checkbox" id="c_look">
+                <div>
+                  <b>시선 고정</b>
+                  <span>고정된 한 지점을 30초 정도 가만히 바라보세요.</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- STEP 6 -->
+          <div class="section" id="step6">
+            <div class="stepTitle">
+              <span class="badge">STEP 6</span>
+              <div class="t">지금 당장 할 수 있는 행동</div>
+            </div>
+            <p class="hint">내가 지금 할 수 있는 것이 있을까요? 다음 상황으로 넘어갈 만한 행동 한가지를 떠올려 보세요.</p>
+
+            <div class="field" style="margin-top:10px">
+              <label for="doNow">아주 작은 행동이라도 좋아요.</label>
+              <input type="text" id="doNow" placeholder="예: 물 한 모금 마시기 / 창문 열기 / 누워서 눈 감기..." />
+            </div>
+          </div>
+
+          <!-- STEP 7 -->
+          <div class="section" id="step7">
+            <div class="stepTitle">
+              <span class="badge">STEP 7</span>
+              <div class="t">마무리 선언</div>
+            </div>
+            <p class="hint">이제 마무리 선언이에요. 내게 해주고 싶은 말을 체크해 보세요.</p>
+
+            <div class="checks" role="group" aria-label="마무리 선언 체크">
+              <label class="check">
+                <input type="checkbox" id="fin_1" />
+                <div><b>나는 이것으로부터 자유로워질 것이다.</b></div>
+              </label>
+
+              <label class="check">
+                <input type="checkbox" id="fin_2" />
+                <div><b>이 생각과 감정은 결국 지나간다. 나는 괜찮아질 것이다.</b></div>
+              </label>
+
+              <label class="check">
+                <input type="checkbox" id="fin_3" />
+                <div><b>아무것도 나를 위협할 수 없고, 공격할 수 없다.</b></div>
+              </label>
+
+              <label class="check">
+                <input type="checkbox" id="fin_4" />
+                <div><b>내가 두려워할 것은 아무것도 없다.</b></div>
+              </label>
+
+              <label class="check">
+                <input type="checkbox" id="fin_5" />
+                <div><b>나는 다시 일어나 나아갈 것이다.</b></div>
+              </label>
+
+              <label class="check" id="s7_other_box">
+                <input type="checkbox" id="s7_other_chk" />
+                <div class="s7OtherInner">
+                  <b>기타</b>
+                  <div class="s7OtherField" id="s7_other_field">
+                    <input type="text" id="s7_other_text" placeholder="예: 나는 있는 그대로 완전하다" />
+                  </div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="card" id="historyCard" aria-label="기록 목록">
+        <div class="cardHeader">
+          <div><h2>목록</h2></div>
+          <div style="display:flex; gap:10px; align-items:center;">
+            <small id="historyCount">0개</small>
+          </div>
+        </div>
+        <div class="cardBody">
+          <div class="historyListWrap" id="historyListWrap">
+            <div id="historyList" class="historyList" aria-live="polite"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div class="creditsBG" aria-hidden="true">
+    제작자: Nova<br/>
+    블로그: https://blog.naver.com/nova_re
+  </div>
+
+  <script>
+    (function(){
+      const STORAGE_KEY    = "emergency_mind_note_v1";
+      const HISTORY_KEY    = "emergency_mind_note_history_v1";
+      const CURRENT_ID_KEY = "emergency_mind_note_current_id_v1";
+      const HISTORY_MAX    = 120;
+
+      const els = {
+        stamp: document.getElementById("stamp"),
+
+        s0OtherChk: document.getElementById("s0_other_chk"),
+        s0OtherField: document.getElementById("s0_other_field"),
+        s0OtherText: document.getElementById("s0_other_text"),
+
+        s4OtherChk: document.getElementById("s4_other_chk"),
+        s4OtherField: document.getElementById("s4_other_field"),
+        s4OtherText: document.getElementById("s4_other_text"),
+
+        s7OtherChk: document.getElementById("s7_other_chk"),
+        s7OtherField: document.getElementById("s7_other_field"),
+        s7OtherText: document.getElementById("s7_other_text"),
+
+        historyList: document.getElementById("historyList"),
+        historyCount: document.getElementById("historyCount"),
+      };
+
+      const buttons = {
+        newDoc: document.getElementById("btnNew"),
+        reset: document.getElementById("btnReset"),
+      };
+
+      const allInputs = Array.from(document.querySelectorAll("input, textarea"));
+      const nowISO = () => new Date().toISOString();
+
+      function escapeHtml(str){
+        return (str ?? "").toString()
+          .replaceAll("&","&amp;")
+          .replaceAll("<","&lt;")
+          .replaceAll(">","&gt;")
+          .replaceAll('"',"&quot;")
+          .replaceAll("'","&#39;");
+      }
+
+      function fmtKR(iso){
+        try{
+          const d = new Date(iso);
+          return d.toLocaleString("ko-KR", { year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit" }).replace(/\./g,".").trim();
+        }catch(e){
+          return iso || "";
+        }
+      }
+
+      function setStamp(){
+        const d = new Date();
+        const stamp = d.toLocaleString("ko-KR", { year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit" });
+        els.stamp.textContent = stamp.replace(/\./g,".").trim();
+      }
+
+      function makeId(){
+        return "rec_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2,8);
+      }
+
+      function loadHistory(){
+        try{
+          const raw = localStorage.getItem(HISTORY_KEY);
+          const arr = raw ? JSON.parse(raw) : [];
+          return Array.isArray(arr) ? arr : [];
+        }catch(e){ return []; }
+      }
+
+      function saveHistory(arr){
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(arr));
+      }
+
+      function getCurrentId(){
+        return localStorage.getItem(CURRENT_ID_KEY) || "";
+      }
+      function setCurrentId(id){
+        localStorage.setItem(CURRENT_ID_KEY, id);
+      }
+
+      function getState(){
+        const state = {};
+        allInputs.forEach(el => {
+          if(el.type === "checkbox") state[el.id] = el.checked;
+          else state[el.id] = el.value;
+        });
+        state.__savedAt = nowISO();
+        state.__recordId = getCurrentId() || "";
+        return state;
+      }
+
+      function applyState(state){
+        if(!state) return;
+        allInputs.forEach(el => {
+          if(!(el.id in state)) return;
+          if(el.type === "checkbox") el.checked = !!state[el.id];
+          else el.value = state[el.id] ?? "";
+        });
+        if(state.__recordId) setCurrentId(state.__recordId);
+        syncOtherFields();
+      }
+
+      function clearInputs(){
+        allInputs.forEach(el => {
+          if(el.type === "checkbox") el.checked = false;
+          else el.value = "";
+        });
+        syncOtherFields();
+      }
+
+      function makeTitle(rec){
+        const timeText = fmtKR(rec.updatedAt || rec.createdAt);
+        const currentId = getCurrentId();
+        return `${rec.id === currentId ? "작성중 · " : ""}${timeText}`;
+      }
+
+      function makeSummaryChips(s){
+        const where = (s.where || "").trim();
+        const meaning = (s.meaning || "").trim();
+        const doNow = (s.doNow || "").trim();
+        const chips = [];
+        if(where) chips.push(`장소: ${where}`);
+        if(meaning) chips.push(`의미: ${meaning}`);
+        if(doNow) chips.push(`행동: ${doNow}`);
+        return chips;
+      }
+
+      function ensureOneRecordOnBoot(){
+        const history = loadHistory();
+        let id = getCurrentId();
+        const exists = id && history.some(r => r.id === id);
+
+        if(!exists){
+          id = makeId();
+          setCurrentId(id);
+
+          const fresh = {
+            id,
+            createdAt: nowISO(),
+            updatedAt: nowISO(),
+            state: { __recordId: id, __savedAt: nowISO() }
+          };
+          history.unshift(fresh);
+          if(history.length > HISTORY_MAX) history.length = HISTORY_MAX;
+          saveHistory(history);
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(fresh.state));
+        }
+      }
+
+      function upsertCurrentRecord(state){
+        let id = getCurrentId();
+        if(!id){
+          id = makeId();
+          setCurrentId(id);
+          state.__recordId = id;
+        }
+
+        const history = loadHistory();
+        const idx = history.findIndex(r => r.id === id);
+
+        if(idx === -1){
+          history.unshift({ id, createdAt: nowISO(), updatedAt: nowISO(), state });
+        }else{
+          history[idx].state = state;
+          history[idx].updatedAt = nowISO();
+          const [item] = history.splice(idx, 1);
+          history.unshift(item);
+        }
+
+        if(history.length > HISTORY_MAX) history.length = HISTORY_MAX;
+        saveHistory(history);
+      }
+
+      function renderHistory(){
+        const history = loadHistory();
+        els.historyCount.textContent = `${history.length}개`;
+
+        if(!history.length){
+          els.historyList.innerHTML = `
+            <div class="historyEmpty">
+              오류: 글이 없네. 새 글을 눌러줘.
+            </div>
+          `;
+          return;
+        }
+
+        els.historyList.innerHTML = "";
+        history.forEach(rec => {
+          const s = rec.state || {};
+          const title = makeTitle(rec);
+          const chips = makeSummaryChips(s).slice(0,3).map(t => `<span class="chip">${escapeHtml(t)}</span>`).join("");
+
+          const thought = (s.thought || "").trim().replace(/\s+/g," ");
+          const thoughtShort = thought ? thought.slice(0, 48) : "";
+
+          const item = document.createElement("div");
+          item.className = "historyItem";
+          item.innerHTML = `
+            <div class="hMain">
+              <p class="hTitle">${escapeHtml(title)}</p>
+              <p class="hMeta">
+                ${chips || ""}
+                ${thoughtShort ? `${chips ? "<br/>" : ""}생각: ${escapeHtml(thoughtShort)}${thought.length>48?"…":""}` : ""}
+              </p>
+            </div>
+            <div class="hBtns">
+              <button class="hBtn" data-act="open" data-id="${rec.id}">불러오기</button>
+              <button class="hBtn danger" data-act="del" data-id="${rec.id}">삭제</button>
+            </div>
+          `;
+          els.historyList.appendChild(item);
+        });
+      }
+
+      let saveTimer = null;
+      function scheduleSave(){
+        clearTimeout(saveTimer);
+        saveTimer = setTimeout(() => {
+          const state = getState();
+          upsertCurrentRecord(state);
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+          renderHistory();
+        }, 250);
+      }
+
+      function loadDraft(){
+        try{
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if(!raw) return;
+          const state = JSON.parse(raw);
+          applyState(state);
+        }catch(e){}
+      }
+
+      function newDoc(){
+        if(!confirm("새 글을 생성할까요?")) return;
+
+        const id = makeId();
+        setCurrentId(id);
+        clearInputs();
+
+        const state = getState();
+        state.__recordId = id;
+        upsertCurrentRecord(state);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+
+        setStamp();
+        renderHistory();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function resetAll(){
+        if(!confirm("현재 글의 입력을 초기화할까요?")) return;
+        clearInputs();
+        scheduleSave();
+        setStamp();
+      }
+
+      function deleteRecord(id){
+        const msg = "이 글을 삭제할까요? 삭제하면 되돌릴 수 없습니다.";
+        if(!confirm(msg)) return;
+
+        let history = loadHistory().filter(r => r.id !== id);
+        saveHistory(history);
+
+        if(getCurrentId() === id){
+          if(history.length){
+            setCurrentId(history[0].id);
+            applyState(history[0].state || {});
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(getState()));
+          }else{
+            setCurrentId("");
+            localStorage.removeItem(STORAGE_KEY);
+            ensureOneRecordOnBoot();
+            loadDraft();
+          }
+        }
+        renderHistory();
+      }
+
+      function restoreRecord(id){
+        const history = loadHistory();
+        const rec = history.find(r => r.id === id);
+        if(!rec) return;
+        if(!confirm("이 글을 불러올까요?")) return;
+
+        setCurrentId(id);
+        applyState(rec.state || {});
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(getState()));
+        setStamp();
+        renderHistory();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function syncOtherFields(){
+        const on0 = !!els.s0OtherChk?.checked;
+        if(els.s0OtherField){
+          els.s0OtherField.style.display = on0 ? "block" : "none";
+          if(!on0 && els.s0OtherText) els.s0OtherText.value = "";
+        }
+
+        const on4 = !!els.s4OtherChk?.checked;
+        if(els.s4OtherField){
+          els.s4OtherField.style.display = on4 ? "block" : "none";
+          if(!on4 && els.s4OtherText) els.s4OtherText.value = "";
+        }
+
+        const on7 = !!els.s7OtherChk?.checked;
+        if(els.s7OtherField){
+          els.s7OtherField.style.display = on7 ? "block" : "none";
+          if(!on7 && els.s7OtherText) els.s7OtherText.value = "";
+        }
+      }
+
+      allInputs.forEach(el => {
+        el.addEventListener("input", scheduleSave);
+        el.addEventListener("change", scheduleSave);
+      });
+
+      buttons.newDoc.addEventListener("click", newDoc);
+      buttons.reset.addEventListener("click", resetAll);
+
+      els.historyList.addEventListener("click", (e) => {
+        const btn = e.target.closest("button");
+        if(!btn) return;
+        const act = btn.dataset.act;
+        const id = btn.dataset.id;
+        if(!act || !id) return;
+        if(act === "open") restoreRecord(id);
+        if(act === "del") deleteRecord(id);
+      });
+
+      if(els.s0OtherChk){
+        els.s0OtherChk.addEventListener("change", () => {
+          syncOtherFields();
+          scheduleSave();
+          if(els.s0OtherChk.checked){
+            setTimeout(() => els.s0OtherText?.focus(), 0);
+          }
+        });
+      }
+
+      if(els.s4OtherChk){
+        els.s4OtherChk.addEventListener("change", () => {
+          syncOtherFields();
+          scheduleSave();
+          if(els.s4OtherChk.checked){
+            setTimeout(() => els.s4OtherText?.focus(), 0);
+          }
+        });
+      }
+
+      if(els.s7OtherChk){
+        els.s7OtherChk.addEventListener("change", () => {
+          syncOtherFields();
+          scheduleSave();
+          if(els.s7OtherChk.checked){
+            setTimeout(() => els.s7OtherText?.focus(), 0);
+          }
+        });
+      }
+
+      setStamp();
+      ensureOneRecordOnBoot();
+      loadDraft();
+      syncOtherFields();
+      renderHistory();
+      setInterval(setStamp, 60000);
+    })();
+  </script>
+</body>
+</html>
